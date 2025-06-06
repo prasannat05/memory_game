@@ -242,7 +242,6 @@
   const closeInstructionsBtn = document.getElementById('close-instructions');
   const levelInfo = document.getElementById('level-info');
 
-  // Word list to use on cards (shuffled)
   const WORDS = [
     'Apple', 'Book', 'Cake', 'Dog', 'Egg', 'Fish', 'Guitar', 'Hat',
     'Ice', 'Jelly', 'Key', 'Lion', 'Moon', 'Nest', 'Orange', 'Pen',
@@ -256,7 +255,7 @@
   let timerId = null;
   let flippedCards = [];
   let matchedCount = 0;
-  let boardSize = 6; // starting card pairs (6 pairs = 12 cards)
+  let boardSize = 6; 
   let cards = [];
   let lockBoard = false;
   let gameStarted = false;
@@ -490,7 +489,7 @@
     instructionsBtn.focus();
   }
 
-  // Start the game board initially but show instructions modal that blocks play
+  
   setupBoard();
   showInstructions();
 
