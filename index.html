@@ -3,21 +3,26 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Memory Matching Card Game By Prasanna </title>
+<title>Memory Matching Card Game</title>
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&display=swap');
   :root {
-    --card-back-color: #2c3e50;
-    --card-front-color: #ecf0f1;
-    --card-match-color: #27ae60;
+    --card-back-color: #4f46e5; /* Indigo-600 */
+    --card-front-color: #f3f4f6; /* Gray-100 */
+    --card-match-color: #10b981; /* Emerald-500 */
     --card-border-radius: 12px;
-    --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --font-family: 'Poppins', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+      Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
     --transition-duration: 0.4s;
-    --primary-color: #2980b9;
-    --secondary-color: #f39c12;
-    --bg-color: #1a1a2e;
-    --text-color: #ecf0f1;
-    --highlight-color: #e74c3c;
+    --primary-color: #2563eb; /* Blue-600 */
+    --secondary-color: #f59e0b; /* Amber-500 */
+    --bg-color: #ffffff;
+    --text-color: #374151; /* Gray-700 */
+    --highlight-color: #ef4444; /* Red-500 */
+    --shadow-default: 0 4px 15px rgba(0, 0, 0, 0.15);
+    --shadow-hover: 0 8px 25px rgba(0, 0, 0, 0.2);
   }
+
   * {
     box-sizing: border-box;
   }
@@ -31,84 +36,120 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    padding: 20px;
+    padding: 40px 20px 60px;
   }
   h1 {
-    margin: 0 0 10px 0;
+    margin: 0 0 20px 0;
     font-weight: 700;
+    font-size: 3.5rem;
     color: var(--primary-color);
     user-select: none;
+    text-align: center;
+    text-shadow: 1px 1px 4px rgba(37, 99, 235, 0.5);
   }
   #game-info {
     display: flex;
-    gap: 20px;
-    margin-bottom: 15px;
+    gap: 40px;
+    margin-bottom: 30px;
     flex-wrap: wrap;
     justify-content: center;
   }
   .info-item {
-    font-size: 1.1rem;
+    font-size: 1.25rem;
+    font-weight: 600;
     user-select: none;
+    color: var(--text-color);
+    background: #f9fafb;
+    padding: 10px 20px;
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--shadow-default);
+    transition: box-shadow 0.3s ease;
+  }
+  .info-item:hover {
+    box-shadow: var(--shadow-hover);
   }
   #board {
     display: grid;
-    gap: 12px;
+    gap: 16px;
+    width: max-content;
     justify-content: center;
-    margin-bottom: 12px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
   }
   #message {
-    margin-top: 10px;
-    font-size: 1.15rem;
-    font-weight: 600;
+    margin-top: 15px;
+    font-size: 1.3rem;
+    font-weight: 700;
     color: var(--highlight-color);
     user-select: none;
-    min-height: 1.5em;
+    min-height: 1.8em;
+    text-align: center;
+    text-shadow: 1px 1px 3px rgba(239, 68, 68, 0.4);
   }
   #controls {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
     display: flex;
-    gap: 15px;
+    gap: 20px;
     flex-wrap: wrap;
     justify-content: center;
   }
   button {
-    background-color: var(--primary-color);
+    background: linear-gradient(90deg, var(--primary-color) 0%, var(--secondary-color) 100%);
     color: white;
     border: none;
-    padding: 12px 20px;
-    font-size: 1rem;
-    font-weight: 600;
+    padding: 14px 28px;
+    font-size: 1.1rem;
+    font-weight: 700;
     border-radius: var(--card-border-radius);
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background 0.35s ease, transform 0.3s ease, box-shadow 0.3s ease;
     user-select: none;
+    box-shadow: var(--shadow-default);
+    min-width: 140px;
   }
-  button:hover, button:focus {
-    background-color: var(--secondary-color);
+  button:hover:not(:disabled), button:focus:not(:disabled) {
+    background: linear-gradient(90deg, var(--secondary-color) 0%, var(--primary-color) 100%);
     outline: none;
+    transform: scale(1.05);
+    box-shadow: var(--shadow-hover);
   }
   button:disabled {
-    background-color: #555;
+    background-color: #ccc;
+    color: #666;
     cursor: default;
+    box-shadow: none;
+    transform: none;
   }
   #level-info {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     text-align: center;
-    margin-bottom: 12px;
+    margin-bottom: 20px;
     user-select: none;
+    font-weight: 600;
+    color: var(--text-color);
   }
   /* Card styles */
   .card {
     position: relative;
-    width: 80px;
-    height: 110px;
+    width: 100px;
+    height: 140px;
     perspective: 900px;
     cursor: pointer;
+    border-radius: var(--card-border-radius);
+    box-shadow: var(--shadow-default);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    will-change: transform;
+    background: transparent;
   }
-  @media (min-width: 600px) {
+  .card:hover:not(.flipped):not(.matched) {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-8px) scale(1.05);
+  }
+  @media (max-width: 599px) {
     .card {
-      width: 100px;
-      height: 140px;
+      width: 80px;
+      height: 115px;
     }
   }
   .card-inner {
@@ -116,17 +157,48 @@
     width: 100%;
     height: 100%;
     text-align: center;
-    transition: transform var(--transition-duration);
+    transition: transform var(--transition-duration) cubic-bezier(0.4, 0, 0.2, 1);
     transform-style: preserve-3d;
     border-radius: var(--card-border-radius);
+    box-shadow: inset 0 0 10px rgb(0 0 0 / 0.08);
+    background: white;
   }
   .card.flipped .card-inner {
     transform: rotateY(180deg);
     cursor: default;
   }
+  /* Remove green outline - replaced with tick */
+  .card.matched {
+    cursor: default;
+    transform: scale(1.08);
+    transition: transform 0.5s ease;
+  }
   .card.matched .card-inner {
     cursor: default;
-    box-shadow: 0 0 20px 3px var(--card-match-color);
+  }
+  /* Tick icon overlay for matched cards */
+  .card-matched-tick {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 28px;
+    height: 28px;
+    color: var(--card-match-color);
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--card-match-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    pointer-events: none;
+    user-select: none;
+    opacity: 0;
+    animation: tick-fade-in 0.5s forwards cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  @keyframes tick-fade-in {
+    from { opacity: 0; transform: scale(0.6);}
+    to { opacity: 1; transform: scale(1);}
   }
   .card-front, .card-back {
     position: absolute;
@@ -138,13 +210,15 @@
     justify-content: center;
     align-items: center;
     font-weight: 700;
-    font-size: 1.8rem;
+    font-size: 2rem;
     backface-visibility: hidden;
-    box-shadow: 0 4px 6px rgb(0 0 0 / 0.3);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.1);
   }
   .card-front {
     background: var(--card-front-color);
     color: var(--primary-color);
+    letter-spacing: 0.06em;
+    text-shadow: 0 0 3px rgba(37, 99, 235, 0.7);
   }
   .card-back {
     background: var(--card-back-color);
@@ -161,37 +235,48 @@
     left: 0;
     right:0;
     bottom:0;
-    background-color: rgba(0,0,0,0.75);
+    background-color: rgba(255, 255, 255, 0.95);
     z-index: 9999;
     display: flex;
     align-items: center;
     justify-content: center;
+    backdrop-filter: blur(8px);
   }
   #instructions-content {
-    background: var(--card-front-color);
-    color: var(--primary-color);
-    padding: 25px 30px;
-    border-radius: 15px;
-    max-width: 420px;
-    line-height: 1.35;
-    box-shadow: 0 10px 25px rgb(0 0 0 / 0.3);
+    background: #2563eb;
+    color: #f3f4f6;
+    padding: 30px 36px;
+    border-radius: 20px;
+    max-width: 480px;
+    line-height: 1.45;
+    box-shadow: 0 20px 40px rgb(37 99 235 / 0.5);
     text-align: center;
+    font-weight: 600;
+    font-size: 1.15rem;
   }
   #instructions-content h2 {
     margin-top: 0;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #fbbf24;
+    text-shadow: 1px 1px 5px rgba(251, 191, 36, 0.7);
   }
   #close-instructions {
-    margin-top: 20px;
-    padding: 10px 18px;
+    margin-top: 28px;
+    padding: 14px 26px;
     font-weight: 700;
-    background: var(--primary-color);
-    color: white;
-    border-radius: 10px;
+    background: #fbbf24;
+    color: #2563eb;
+    border-radius: 14px;
     cursor: pointer;
     border: none;
+    font-size: 1.1rem;
+    box-shadow: 0 6px 18px rgba(251, 191, 36, 0.7);
+    transition: background 0.3s ease, color 0.3s ease;
   }
   #close-instructions:hover {
-    background: var(--secondary-color);
+    background: #f59e0b;
+    color: #f3f4f6;
   }
 </style>
 </head>
@@ -242,12 +327,13 @@
   const closeInstructionsBtn = document.getElementById('close-instructions');
   const levelInfo = document.getElementById('level-info');
 
-  const WORDS = [
-    'Apple', 'Book', 'Cake', 'Dog', 'Egg', 'Fish', 'Guitar', 'Hat',
-    'Ice', 'Jelly', 'Key', 'Lion', 'Moon', 'Nest', 'Orange', 'Pen',
-    'Queen', 'Rose', 'Sun', 'Tree', 'Key', 'Violin', 'Wine', 'Xray',
-    'Yarn', 'Zebra', 'Boat', 'Car', 'Door', 'Ear', 'Fan', 'Goat'
-  ];
+  // Word list to use on cards
+const WORDS = [
+  'Book', 'Door', 'Fish', 'Egg', 'Wood', 'Fire', 'Rain', 'Snow',
+  'Wind', 'Sun', 'Moon', 'Star', 'Rock', 'Sand', 'Tree', 'Leaf',
+  'Ball', 'Cake', 'Milk', 'Desk', 'Coin', 'Ring', 'Lamp', 'Key',
+  'Shoe', 'Bird', 'Frog', 'Goat', 'Bear', 'Boat', 'Car', 'Bike'
+];
 
   let level = 1;
   let moves = 0;
@@ -255,7 +341,7 @@
   let timerId = null;
   let flippedCards = [];
   let matchedCount = 0;
-  let boardSize = 6; 
+  let boardSize = 6; // starting card pairs (6 pairs = 12 cards)
   let cards = [];
   let lockBoard = false;
   let gameStarted = false;
@@ -271,12 +357,6 @@
       scores[level] = newScore;
       localStorage.setItem('memoryGameBestScores', JSON.stringify(scores));
     }
-  }
-
-  function formatTime(s) {
-    const m = Math.floor(s / 60);
-    const sec = s % 60;
-    return `${m < 10 ? '0'+m : m}:${sec < 10 ? '0'+sec : sec}`;
   }
 
   function shuffle(array) {
@@ -359,9 +439,20 @@
     }, 1000);
   }
 
+  function addTickIcon(card) {
+    // Avoid adding multiple ticks
+    if (card.querySelector('.card-matched-tick')) return;
+    const tick = document.createElement('div');
+    tick.classList.add('card-matched-tick');
+    // Using a Unicode checkmark character as tick icon
+    tick.innerHTML = '&#10003;';
+    card.appendChild(tick);
+  }
+
   function markMatched(){
     for(const card of flippedCards){
       card.classList.add('matched');
+      addTickIcon(card);
     }
     flippedCards = [];
     matchedCount++;
@@ -489,7 +580,7 @@
     instructionsBtn.focus();
   }
 
-  
+  // Start the game board initially but show instructions modal that blocks play
   setupBoard();
   showInstructions();
 
